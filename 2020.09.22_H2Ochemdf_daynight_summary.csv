@@ -1,0 +1,10 @@
+"","treatment","period","sd","mean","median","IQR","n","se","ci"
+"1","allchange","D2Nramp",NA,NA,NA,NA,166,NA,NA
+"2","allchange","day",NA,NA,NA,NA,4802,NA,NA
+"3","allchange","night",NA,NA,NA,NA,2842,NA,NA
+"4","current","D2Nramp",NA,NA,NA,NA,135,NA,NA
+"5","current","day",NA,NA,NA,NA,3849,NA,NA
+"6","current","night",NA,NA,NA,NA,2285,NA,NA
+"7","hightemperature","D2Nramp",NA,NA,NA,NA,86,NA,NA
+"8","hightemperature","day",NA,NA,NA,NA,2607,NA,NA
+"9","hightemperature","night",NA,NA,NA,NA,1501,NA,NA

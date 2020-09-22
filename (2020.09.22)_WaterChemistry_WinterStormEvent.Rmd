@@ -697,7 +697,7 @@ H2Ochemdf <- H2Ochemdf  %>% filter(!moats %in% c("M03", "M04", "M05", "M11")) %>
   filter(period != "other")
 
 
-write.csv(H2Ochemdf, "2020.07.23_H2Ochemdf.csv")
+#write.csv(H2Ochemdf, "2020.09.22_H2Ochemdf.csv")
 
 ```
 
@@ -772,11 +772,11 @@ hitempNightDO <- subset(H2Ochemdf,
 ```{r 11.3 Review of Values}
 
 # Review of values
-allchgDayDO
+allchgDay_DO
 allchgNightDO
-curDayDO
+curDay_DO
 curNightDO
-hitempDayDO
+hitempDay_DO
 hitempNightDO
 
 ```
@@ -794,7 +794,6 @@ H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(treatment, period) %>%
             n = n()) %>%
   mutate(se = sd/sqrt(n)) %>%
   mutate(ci = se*1.96)
-
 
 
 write.csv(H2Ochemdf.daynight.summary, "2020.09.22_H2Ochemdf_daynight_summary.csv")
