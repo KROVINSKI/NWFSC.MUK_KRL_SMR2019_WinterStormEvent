@@ -1,8 +1,11 @@
 ---
 title: "Winter Storm Event and Follow on Replicate Degradation"
 output:
-  html_document:
+ html_document:
+    df_print: paged
     code_folding: hide
+    theme: sandstone
+    highlight: zenburn
 ---
 
 ## Author: OA Lab, NWFSC
