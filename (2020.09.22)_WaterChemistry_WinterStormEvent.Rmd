@@ -4,13 +4,31 @@ output:
  html_document:
     df_print: paged
     code_folding: hide
-    theme: sandstone
+    toc: TRUE
+    toc_depth: 4
+    toc_float: true
+    theme: journal
     highlight: zenburn
 ---
 
 ## Author: OA Lab, NWFSC
 ## Title: Aquarium Water Chemistry Investigation: DO and Salinity corrections with new ramp period
-## Date: July-August 2020
+## Date: September 2020
+
+# Table of Contents
+## Outline Current 2020.06.01
+
+# Libraries
+# 1. Setting the Working Directory
+# 2. Calling & Reading in " dml "
+# 3. Reformatting variables/vectors (Factors)
+# 4. Creating dateTime objects
+# 5. Creating Treatment Variables
+# 6. Creating Night & Day Variables 
+# 7. Salinity (4 New Vectors)
+# 8. Creating Corrected Salinity Value 
+# 9. DO
+# 10. Filtering Water Chemistry Dataframe
 
 
 
@@ -37,23 +55,6 @@ library(miniUI)
 library(gridExtra)
 library(wql)
 ```
-
-
-
-# Table of Contents
-## Outline Current 2020.06.01
-
-# 1. Setting the Working Directory
-# 2. Calling & Reading in " dml "
-# 3. Reformatting variables/vectors (Factors)
-# 4. Creating dateTime objects
-# 5. Creating Treatment Variables
-# 6. Creating Night & Day Variables 
-# 7. Salinity (4 New Vectors)
-# 8. Creating Corrected Salinity Value 
-# 9. DO
-# 10. Filtering Water Chemistry Dataframe
-
 
 
 
@@ -142,13 +143,17 @@ dim(dml)
 Changes to the format of dates and times for observations
 
 ```{r 4.0 establish the date time object of the CSV, ECHO= FALSE, message=FALSE, warning=FALSE}
+#*********************************
+## 4.) Creating dateTime objects  
+#*********************************
+
+# 4.0 establish the date time object of the CSV |
 dml$dateTime <- as.POSIXct(dml$dateTime, format="%Y-%m-%d %H:%M:%OS")
 ReferenceTime <- as.POSIXct("2019-09-20 23:59:00")
 class(ReferenceTime)
 
 # QA check
 dim(dml)
-
 ```
 
 # 5.0) Creating Treatment Variables  
@@ -160,13 +165,17 @@ Three treatments of this studies are identified as
 * "allchange" for the All Change Conditions Treatment which incorporated both the high temperature conditions of the "hightemperature" treatment along with exposure to lower aquariun pH.   
 
 ```{r 5.1 Identifying treatments by moats, ECHO= FALSE, message=FALSE, warning=FALSE}
+#*********************************
+## 5.) Creating Treatment Variables  
+#*********************************
+
 ## 5.1 Identifying treatments by moats 
 ## establishing treatments
 dml$treatment <- ""
 dml$treatment[dml$moats == "M07" | dml$moats== "M10" | dml$moats== "M12"] <- "current"
 dml$treatment[dml$moats == "M01"| dml$moats== "M06"] <- "hightemperature"
 dml$treatment[dml$moats == "M02"| dml$moats== "M08" | dml$moats== "M13"] <- "allchange"
-dml$treatment[dml$moats == "M03"| dml$moats == "M04" | dml$moats == "M09" | dml$moats == "M05" | dml$moats== "M11"] <- "broken_and_ambientbroken"
+dml$treatment[dml$moats == "M03"| dml$moats == "M04" | dml$moats == "M05" | dml$moats== "M11"] <- "broken_and_ambientbroken"
 #verify that this new column has been created
 names(dml)
 #results should include:
@@ -175,6 +184,7 @@ names(dml)
 
 # QA check
 dim(dml)
+
 
 ```
 
@@ -459,6 +469,7 @@ H2Ochemdf$PSUavgDaily <- all_salinity$salinity[match
 ```
 
 
+
 #### 8.4 Practical Salinity Units - Previous Daily Avg Measurement 
 DO point measurements occured weekly. 
 Salinity averages were typically recorded every day, Monday- Friday.
@@ -577,7 +588,48 @@ tibble::tribble(
 
 ```
 
+#### 8.7A Variation in Salinity Across all Replicates
+```{r}
+FinalSalinity.by.Day <- ggplot(H2Ochemdf, 
+                               aes(x=ObservationDate, y=Final_PSU))+
+                                geom_point(aes(colour=moats, point=)) +
+                                  ggtitle("Salinity Values, all MOATS per Day ")
+FinalSalinity.by.Day
+```
 
+```{r}
+FinalSalinity.by.Observation <- ggplot(H2Ochemdf, 
+                               aes(x=ObservationTime, y=Final_PSU))+
+                                geom_point(aes(colour=moats, point=)) +
+                                  ggtitle("Salinity Values, all MOATS per Observation ")
+FinalSalinity.by.Observation
+```
+
+
+
+
+#### 8.8 Variation in Salinity- All Change Treatment
+
+```{r 8.8 Variation in Salinity}
+plot8.8 <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("allchange")), 
+        aes(x=ObservationDate, y=Final_PSU)) + 
+        geom_point(aes(colour=moats, point=)) +
+        ggtitle("Salinity Variation Across All Change Treatment Replicates")
+plot8.8
+```
+
+
+#### 8.9 Variation in Salinity- High Temperature Conditions Treatment
+
+```{r 8.9 Variation in Salinity}
+plot8.9 <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("hightemperature")), 
+        aes(x=ObservationDate, y=Final_PSU)) + 
+        geom_point(aes(colour=moats, point=)) +
+        ggtitle("Salinity Variation Across High Temperature Conditions Treatment Replicates")
+plot8.9
+```
 
 
 
@@ -690,6 +742,40 @@ p5
 ```
 
 
+```{r}
+#*********************************
+## 9.5) Creating Percent Dissoved Oxy Value - Observed Saturated DOmg (measured salinity)
+#*********************************
+
+# #satured mg/L at observed temperature and observed (not assumed) salinity
+H2Ochemdf$sTemperature <- as.numeric(H2Ochemdf$sTemperature)
+
+H2Ochemdf$obseveredSatDOmg <- oxySol(H2Ochemdf$sTemperature, H2Ochemdf$Final_PSU)
+```
+
+
+
+
+```{r}
+#*********************************
+## 9.6) Creating Percent Dissoved Oxy Value - Observed/Actual DO (in mg) Saturated DOmg (measured salinity)
+#*********************************
+# actual DO mg at observed temperature and salinity
+H2Ochemdf$percentDO <- H2Ochemdf$DO / H2Ochemdf$assumedSatDOmg
+
+H2Ochemdf$actualDOmg <- H2Ochemdf$percentDO * H2Ochemdf$obseveredSatDOmg
+
+
+actualDOmgPLOT <- ggplot(H2Ochemdf, aes(x=dateTime, y=H2Ochemdf$actualDOmg)) +
+  geom_point(aes(colour=period, point=))   +
+  ggtitle("Actual DO (mg/L) (All Treatments & All MOATs) Colored by Period")
+
+actualDOmgPLOT
+```
+
+
+
+
 # 10.0) Filtering Data
 ```{r 10.0 Filtering Data across all }
 # # 10.0) Filtering Data
@@ -789,7 +875,7 @@ hitempNightDO
 #### 12.1 DO Day/Night Summary
 ```{r 12.1) DO Day/Night Summary}
 
-H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(treatment, period) %>%
+H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(H2Ochemdf, treatment, period) %>%
   summarize(sd = sd(actualDOmg, na.rm = TRUE), 
             mean = mean(actualDOmg, na.rm = TRUE), 
             median = median(actualDOmg, na.rm = TRUE),
