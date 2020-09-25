@@ -9,8 +9,6 @@ output:
     toc_float: true
     theme: journal
     highlight: zenburn
-editor_options: 
-  chunk_output_type: console
 ---
 
 ## Author: OA Lab, NWFSC
@@ -884,8 +882,7 @@ H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(treatment, period) %>%
             mean = mean(actualDOmg, na.rm = TRUE), 
             median = median(actualDOmg, na.rm = TRUE),
             IQR = IQR(actualDOmg, na.rm = TRUE),
-            n = n(), .groups= "drop_last") %>%
-  
+            n = n()) %>%
   mutate(se = sd/sqrt(n)) %>%
   mutate(ci = se*1.96)
 
