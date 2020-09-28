@@ -593,7 +593,7 @@ tibble::tribble(
 ```
 
 #### 8.7A Variation in Salinity Across all Replicates
-```{r}
+```{r 8.7A Variation in Salinity Across all Replicates}
 FinalSalinity.by.Day <- ggplot(H2Ochemdf, 
                                aes(x=ObservationDate, y=Final_PSU))+
                                 geom_point(aes(colour=moats, point=)) +
@@ -601,20 +601,14 @@ FinalSalinity.by.Day <- ggplot(H2Ochemdf,
 FinalSalinity.by.Day
 ```
 
-```{r}
-FinalSalinity.by.Observation <- ggplot(H2Ochemdf, 
-                               aes(x=ObservationTime, y=Final_PSU))+
-                                geom_point(aes(colour=moats, point=)) +
-                                  ggtitle("Salinity Values, all MOATS per Observation ")
-FinalSalinity.by.Observation
-```
+
 
 
 
 
 #### 8.8 Variation in Salinity- All Change Treatment
 
-```{r 8.8 Variation in Salinity}
+```{r 8.8 Variation in Salinity- All Change Treatment}
 plot8.8 <- ggplot(subset(H2Ochemdf, 
                treatment %in% ("allchange")), 
         aes(x=ObservationDate, y=Final_PSU)) + 
@@ -626,7 +620,7 @@ plot8.8
 
 #### 8.9 Variation in Salinity- High Temperature Conditions Treatment
 
-```{r 8.9 Variation in Salinity}
+```{r Variation in Salinity- High Temperature Conditions Treatment}
 plot8.9 <- ggplot(subset(H2Ochemdf, 
                treatment %in% ("hightemperature")), 
         aes(x=ObservationDate, y=Final_PSU)) + 
@@ -635,7 +629,16 @@ plot8.9 <- ggplot(subset(H2Ochemdf,
 plot8.9
 ```
 
+#### 8.10 Variation in Salinity- Current Conditions Treatment
 
+```{r Variation in Salinity- Current Conditions Treatment}
+plot8.10 <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("current")), 
+        aes(x=ObservationDate, y=Final_PSU)) + 
+        geom_point(aes(colour=moats, point=)) +
+        ggtitle("Salinity Variation Across Current Conditions Treatment Replicates")
+plot8.10
+```
 
 
 # 9.) Creating Percent Dissoved Oxy Value 
