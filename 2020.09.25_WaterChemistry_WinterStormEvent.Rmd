@@ -11,12 +11,10 @@ output:
     highlight: zenburn
     smart: false
 
-
-
 ---
 
 ## Author: OA Lab, NWFSC
-## Title: Aquarium Water Chemistry Investigation: DO and Salinity corrections with new ramp period
+## Title: Aquarium Water Chemistry Investigation: DO and Salinity corrections 
 ## Date: September 2020
 
 # Table of Contents
@@ -418,7 +416,7 @@ ggplot(subset(H2Ochemdf,
 
 #### Simple Plot 8.1.3
 
-```{r #### 8.1.3 Salinity Constants all Treatments, All MOATs, During Night Period }
+```{r 8.1.3 Salinity Constants all Treatments, All MOATs, During Night Period }
 
 ggplot(subset(H2Ochemdf, 
                period %in% ("night")), 
@@ -749,7 +747,7 @@ p5
 ```
 
 
-```{r 9.5) Creating Percent Dissoved Oxy Value}
+```{r 9.5 Creating Percent Dissoved Oxy Value}
 #*********************************
 ## 9.5) Creating Percent Dissoved Oxy Value - Observed Saturated DOmg (measured salinity)
 #*********************************
@@ -763,7 +761,7 @@ H2Ochemdf$obseveredSatDOmg <- oxySol(H2Ochemdf$sTemperature, H2Ochemdf$Final_PSU
 
 
 
-```{r}
+```{r 9.6 Creating Percent Dissoved Oxy Value - Observed/Actual DO (in mg) Saturated DOmg (measured salinity)}
 #*********************************
 ## 9.6) Creating Percent Dissoved Oxy Value - Observed/Actual DO (in mg) Saturated DOmg (measured salinity)
 #*********************************
@@ -793,12 +791,12 @@ H2Ochemdf <- H2Ochemdf  %>% filter(!moats %in% c("M03", "M04", "M05", "M11")) %>
   filter(period != "other")
 
 
-#write.csv(H2Ochemdf, "2020.09.22_H2Ochemdf.csv")
+write.csv(H2Ochemdf, "2020.09.29_H2Ochemdf.csv")
 
 ```
 
 
-```{r 10.1) Filtering Data- dropping lvls to clean graphs}
+```{r 10.1 Filtering Data- dropping lvls to clean graphs}
 ## 10.1) Filtering Data- dropping lvls to clean graphs
 #*********************************
 
@@ -880,7 +878,7 @@ hitempNightDO
 
 # 12.0) DO Day/Night Summary
 #### 12.1 DO Day/Night Summary
-```{r 12.1) DO Day/Night Summary}
+```{r 12.1 DO Day/Night Summary}
 
 dim(H2Ochemdf)
 
@@ -902,35 +900,224 @@ H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(treatment, period) %>%
 #### 12.3 Summary Table Plots
 
 ```{r 12.3 Summary Table Plots}
+# ggplot(H2Ochemdf, aes(treatment, actualDOmg)) +
+#             geom_jitter(color = "grey") +
+#             geom_boxplot(notch = TRUE, outlier.shape = NA, colour = "green") +
+#             geom_point(data = H2Ochemdf.daynight.summary, aes(x=treatment, y=mean), size=5, color = "purple") + 
+#             geom_errorbar(data = H2Ochemdf.daynight.summary, 
+#                           aes(x=treatment, y=mean, ymin = mean-sd, ymax = mean+sd), 
+#                           color = "blue") +
+#             geom_errorbar(data = H2Ochemdf.daynight.summary,
+#                           aes(x=treatment, y=mean, ymin = mean-ci, ymax = mean+ci),
+#                           colour = "red") +
+#             facet_wrap(~period) +
+#             ggtitle("All Treatments, Actual Dissolved Oxygen (mg) Across Periods") +
+#             theme_bw() 
 
-ggplot(H2Ochemdf, aes(treatment, actualDOmg)) +
-            geom_jitter(color = "grey") +
-            geom_boxplot(notch = TRUE, outlier.shape = NA, colour = "green") +
-            geom_point(data = H2Ochemdf.daynight.summary, aes(x=treatment, y=mean), size=5, color = "purple") + 
-            geom_errorbar(data = H2Ochemdf.daynight.summary, 
-                          aes(x=treatment, y=mean, ymin = mean-sd, ymax = mean+sd), 
-                          color = "blue") +
-            geom_errorbar(data = H2Ochemdf.daynight.summary,
-                          aes(x=treatment, y=mean, ymin = mean-ci, ymax = mean+ci),
-                          colour = "red") +
-            facet_wrap(~period) +
-            ggtitle("All Treatments, Actual Dissolved Oxygen (mg) Across Periods") +
-            theme_bw() 
 
+```
+
+# 13.0 Timeseries for the Winter Storm Event
+
+Major rainfall event at Mukilteo on 18OCT20 into 19OCT20. 
+Sediment from run off clogged filters. Slowed water input cycle. 
+Bubble Box, local MOATs reservoir ran dry. Heating element in some bubble boxes melted incoming gas exchange lines. 
+
+Effects to water temperature and chemistry lasted into 20OCT20 and beyond in some cases.
+
+
+
+
+
+
+
+#### 13.1 All Change MOATS Winter Storm "Reactions"
+
+
+```{r 13.1.1 Aquarium Temperature All Change Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#aTemp Plot
+
+WNTR.STRM_Allchg_aTempPlot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("allchange")), 
+        aes(x=ObservationDate, y=aTemperature)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period) +
+        ggtitle("Aquarium Temperature All Change Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_Allchg_aTempPlot
+
+```
+We see loss in temperature control between 18OCT20-20OCT20. 
+
+```{r 13.1.2 Dissovled Oxygen All Change Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_Allchg_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("allchange")), 
+        aes(x=ObservationDate, y=actualDOmg)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen All Change Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_Allchg_DO.Plot
+
+```
+
+
+```{r 13.1.2 Dissovled Oxygen All Change Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_Allchg_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("allchange")), 
+        aes(x=ObservationDate, y=percentDO)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen (percentage) All Change Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_Allchg_DO.Plot
+
+```
+
+
+MOATs 02 and 13 struggle to maintain 60% DO treatment from 19OCT20 onwards.  
+
+
+```{r 13.1.3 pH All Change Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#pH Plot
+
+WNTR.STRM_Allchg_pH.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("allchange")), 
+        aes(x=ObservationDate, y=pH)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("pH All Change Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_Allchg_pH.Plot
+
+```
+ 
+
+Peaks in pH during the day time period are likely explained by degraded elements following the 18OCT19 winter storm. 
+
+
+
+#### 13.2 Current Treatments MOATS Winter Storm "Reactions"
+
+```{r 13.2.1 Aquarium Temperature Current Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#aTemp Plot
+
+WNTR.STRM_cur_aTempPlot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("current")), 
+        aes(x=ObservationDate, y=aTemperature)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period) +
+        ggtitle("Aquarium Temperature Current Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_cur_aTempPlot
+
+```
+
+We see loss in temperature control following 18OCT20-20OCT20, in particular MOATs 07.  
+
+
+```{r 13.2.2 Dissovled Oxygen Current Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_cur_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("current")), 
+        aes(x=ObservationDate, y=actualDOmg)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen Current Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_cur_DO.Plot
+
+```
+
+
+```{r 13.2.2a Dissovled Oxygen Current Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_cur_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("current")), 
+        aes(x=ObservationDate, y=percentDO)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen (percentage) Current Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_cur_DO.Plot
+
+```
+
+
+MOATs 07 struggle to maintain 60% DO treatment from 19OCT20 onwards.  
+
+
+#### 13.3 High Temperature MOATS Winter Storm "Reactions"
+
+
+```{r 13.3.1 pH Current Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#pH Plot
+
+WNTR.STRM_hightemp_pH.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("hightemperature")), 
+        aes(x=ObservationDate, y=pH)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period) +
+        ggtitle("pH Current Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_hightemp_pH.Plot
+
+```
+
+MOATs 07 and MOATs 10 endured pH problems around the winter storm events.  
+
+
+
+```{r 13.3.3 Dissovled Oxygen High Temperature Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_hightemp_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("hightemperature")), 
+        aes(x=ObservationDate, y=actualDOmg)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen High Temperature Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_hightemp_DO.Plot
+
+```
+
+
+```{r 13.3.2a Dissovled Oxygen Current Conditions Treatment Replicates' Reaction to Winter Storm}
+
+#DO Plot
+
+WNTR.STRM_hightemp_DO.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("hightemperature")), 
+        aes(x=ObservationDate, y=percentDO)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period)
+        ggtitle("Dissovled Oxygen (percentage) High Temperature Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_hightemp_DO.Plot
 
 ```
 
 
 
+```{r 13.3.3 pH High Temperature Conditions Treatment Replicates' Reaction to Winter Storm}
 
+#pH Plot
 
+WNTR.STRM_hightemp_pH.Plot <- ggplot(subset(H2Ochemdf, 
+               treatment %in% ("hightemperature")), 
+        aes(x=ObservationDate, y=pH)) + 
+        geom_point(aes(colour=moats, point=)) +
+        facet_wrap(~period) +
+        ggtitle("pH Current Conditions Treatment Replicates' Reaction to Winter Storm")
+WNTR.STRM_hightemp_pH.Plot
 
-
-
-
-
-
-
+```
 
 
 
