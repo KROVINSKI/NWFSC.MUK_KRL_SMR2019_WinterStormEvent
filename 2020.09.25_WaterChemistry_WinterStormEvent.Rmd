@@ -547,7 +547,7 @@ H2Ochemdf$Final_PSU <- as.numeric(case_when(
 
 #### 8.7 Exmaple of Salinity Corrections (table/Tribble)
 
-```{r}
+```{r 8.7 Exmaple of Salinity Corrections (table/Tribble)}
 tibble::tribble(
   ~moats,        ~dateTime,        ~DO, ~salinity,        ~treatment, ~period, ~ObservationDate, ~ObservationTime, ~PSUperMOATs, ~PSUavgDaily, ~PSUprevObs, ~assumed_PSU, ~Final_PSU, ~percentDOassumpt, ~assumedSatDOmg,  ~percentDO, ~obseveredSatDOmg, ~actualDOmg,
    "M01",  "9/26/19 15:59",  8.6591535,      28.8, "hightemperature", "night",        "9/26/19",       "15:59:00",           NA,           NA,          NA,         28.8,       28.8,       0.985101125,     8.790116342, 0.985101125,       8.790116342,   8.6591535,
@@ -620,7 +620,7 @@ plot8.8
 
 #### 8.9 Variation in Salinity- High Temperature Conditions Treatment
 
-```{r Variation in Salinity- High Temperature Conditions Treatment}
+```{r 8.9 Variation in Salinity- High Temperature Conditions Treatment}
 plot8.9 <- ggplot(subset(H2Ochemdf, 
                treatment %in% ("hightemperature")), 
         aes(x=ObservationDate, y=Final_PSU)) + 
@@ -631,7 +631,7 @@ plot8.9
 
 #### 8.10 Variation in Salinity- Current Conditions Treatment
 
-```{r Variation in Salinity- Current Conditions Treatment}
+```{r  8.10 Variation in Salinity- Current Conditions Treatment}
 plot8.10 <- ggplot(subset(H2Ochemdf, 
                treatment %in% ("current")), 
         aes(x=ObservationDate, y=Final_PSU)) + 
@@ -749,7 +749,7 @@ p5
 ```
 
 
-```{r}
+```{r 9.5) Creating Percent Dissoved Oxy Value}
 #*********************************
 ## 9.5) Creating Percent Dissoved Oxy Value - Observed Saturated DOmg (measured salinity)
 #*********************************
@@ -901,7 +901,7 @@ H2Ochemdf.daynight.summary <- H2Ochemdf %>% group_by(treatment, period) %>%
 
 #### 12.3 Summary Table Plots
 
-```{r}
+```{r 12.3 Summary Table Plots}
 
 ggplot(H2Ochemdf, aes(treatment, actualDOmg)) +
             geom_jitter(color = "grey") +
